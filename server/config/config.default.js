@@ -10,7 +10,20 @@ module.exports = appInfo => {
   config.middleware = [];
 
   config.security = {
-    csrf: false
+    csrf: false,
+  };
+
+  config.mongoose = {
+    clients: {
+      ci: {
+        url: 'mongodb://127.0.0.1/ci',
+        options: {},
+      },
+      yapi: {
+        url: 'mongodb://127.0.0.1/yapi',
+        options: {},
+      },
+    },
   };
 
   return config;
