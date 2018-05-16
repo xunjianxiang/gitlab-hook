@@ -7,7 +7,22 @@ module.exports = appInfo => {
   config.keys = appInfo.name;
 
   // add your config here
-  config.middleware = [];
+  config.middleware = [
+    'interceptor',
+  ];
+
+  config.interceptor = {
+    ignore: /\/login|\/session/,
+  };
+
+  config.session = {
+    key: 'gitlab-webhook',
+    maxAge: 20 * 60 * 1000,
+    httpOnly: true,
+    signed: true,
+    encrypt: true,
+    renew: true,
+  };
 
   config.security = {
     csrf: false,
