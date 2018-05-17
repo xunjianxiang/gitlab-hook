@@ -12,7 +12,7 @@ module.exports = appInfo => {
   ];
 
   config.interceptor = {
-    ignore: /\/login|\/session/,
+    ignore: /\/login|\/logout|\/session|\/hook/,
   };
 
   config.session = {
@@ -38,6 +38,26 @@ module.exports = appInfo => {
         url: 'mongodb://127.0.0.1/yapi',
         options: {},
       },
+    },
+  };
+
+  config.onerror = {
+    all(error, ctx) {
+      let message;
+      switch (error.status) {
+        case 422:
+          message = '参数错误';
+          break;
+        default:
+          message = '服务器异常';
+          break;
+      }
+      ctx.response.set({ Accept: 'application/json' });
+      ctx.status = 200;
+      ctx.body = JSON.stringify({
+        code: error.status,
+        message,
+      });
     },
   };
 
