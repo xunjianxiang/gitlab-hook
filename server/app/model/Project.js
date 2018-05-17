@@ -14,6 +14,7 @@ module.exports = app => {
     remote: {
       id: {
         type: Number,
+        autoIndex: true,
         unique: true,
         required: true,
       },
