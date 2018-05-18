@@ -37,7 +37,9 @@ module.exports = {
       // 上报
       return {
         status: error.status,
-        data: null,
+        data: {
+          message: 'gitlab api 访问失败',
+        },
       };
     });
     return data;

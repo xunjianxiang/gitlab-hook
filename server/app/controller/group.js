@@ -12,27 +12,6 @@ class GroupController extends Controller {
     };
   }
 
-  async getGitlabGroupList() {
-    const groups = await this.app.invokeGitlabApi(this.app.api.gitlab.group.list);
-    let code,
-      message,
-      data;
-    if (groups) {
-      code = 0;
-      data = groups.map(group => {
-        return {
-          id: group.id,
-          name: group.name,
-          desc: group.description,
-        };
-      });
-    } else {
-      code = 1;
-      message = 'gitlab 分组列表获取失败';
-    }
-    this.ctx.body = { code, message, data };
-  }
-
   async addGroup() {
     // 校验参数
     this.ctx.validate({
