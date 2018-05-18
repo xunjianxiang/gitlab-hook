@@ -8,4 +8,11 @@ module.exports = {
     return null;
   },
 
+  apiParamsInject(api, ...params) {
+    params.forEach(param => {
+      api = api.replace(/{\d}/, param);
+    });
+    return api;
+  },
+
 };
