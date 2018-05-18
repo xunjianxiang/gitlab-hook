@@ -5,6 +5,39 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const connection = app.mongooseDB.get('ci');
 
+  const ProjectUserSchema = new Schema({
+    id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      require: true,
+    },
+    role: {
+      type: Number,
+      enum: [ 1, 3 ],
+      default: 3,
+    },
+  }, {
+    _id: false,
+  });
+
+  const ProjectSettingSchema = new Schema({
+    yapi: {
+      id: {
+        type: String,
+      },
+    },
+    dingtalk: {
+      id: {
+        type: String,
+      },
+      level: {
+        type: String,
+      },
+    },
+  }, {
+    _id: false,
+  });
+
   const ProjectSchema = new Schema({
     name: {
       type: String,
@@ -29,8 +62,7 @@ module.exports = app => {
       },
     },
     users: {
-      type: [ Schema.Types.ObjectId ],
-      ref: 'User',
+      type: [ ProjectUserSchema ],
       default: [],
     },
     jobs: {
@@ -39,17 +71,14 @@ module.exports = app => {
       default: [],
     },
     setting: {
-      yapi: {
-        id: { type: Number },
-      },
-      dingtalk: {
-        id: {
-          type: Number,
-          required: true,
+      type: ProjectSettingSchema,
+      default: {
+        dingtalk: {
+          id: '',
+          level: '',
         },
-        level: {
-          type: Number,
-          required: true,
+        yapi: {
+          id: '',
         },
       },
     },

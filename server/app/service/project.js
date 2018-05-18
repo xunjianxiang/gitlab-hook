@@ -2,81 +2,80 @@
 
 const Service = require('egg').Service;
 
-class UserService extends Service {
-
+class ProjectService extends Service {
   async getRemoteUnique(remote) {
-    const group = await this.ctx.model.Group
+    const project = await this.ctx.model.Project
       .findOne({
         remote,
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return !group;
+    return !project;
   }
 
   async getNameUnique(name) {
-    const group = await this.ctx.model.Group
+    const project = await this.ctx.model.Project
       .findOne({
         name,
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return !group;
+    return !project;
   }
 
-  async getGroupListByUserId(user_id) {
-    const groups = await this.ctx.model.Group
-      .find({
-        users: { $in: [ user_id ] },
-      })
-      .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return groups;
-  }
-
-  async getGroupRemoteId(group_id, remote_type) {
+  async getProjectList(group_id) {
     const group = await this.ctx.model.Group
       .findOne({
         _id: group_id,
+      }, 'projects')
+      .populate('projects')
+      .catch(error => this.ctx.helper.mongooseErrorCatch(error));
+    return group
+      ? group.projects
+      : [];
+  }
+
+  async getProjectRemoteId(project_id, remote_type) {
+    const project = await this.ctx.model.Project
+      .findOne({
+        _id: project_id,
         'remote.type': remote_type,
       }, 'remote.id').catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group && group.remote && group.remote.id;
+    return project && project.remote && project.remote.id;
   }
 
-  async createGroup(params) {
-    const group = await this.ctx.model.Group
+  async addProject(params) {
+    const project = await this.ctx.model.Project
       .create(params)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group;
+    return project;
   }
 
-  async getGroupUserExists(group_id, user_id) {
-    const exists = await this.ctx.model.Group
+  async getProjectUserExists(project_id, user_id) {
+    const exists = await this.ctx.model.Project
       .findOne({
-        _id: group_id,
+        _id: project_id,
         'users.id': user_id,
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return exists;
   }
 
-  async getGroupUserList(group_id) {
-    const group = await this.ctx.model.Group
+  async getProjectUserList(project_id) {
+    const project = await this.ctx.model.Project
       .findOne({
-        _id: group_id,
+        _id: project_id,
       }, 'users')
       .populate({ path: 'users.id', select: 'name email' })
-      .exec()
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group
-      ? group.users.map(item => {
-        item.id.role = item.role;
-        return item.id;
-      })
-      : [];
+    return project && project.users && project.users.map(user => {
+      user.id.role = user.role;
+      return user.id;
+    });
   }
 
-  async createGroupUser(group_id, user_id, user_role) {
-    const group = await this.ctx.model.Group
+  async addProjectUser(project_id, user_id, user_role) {
+    const project = await this.ctx.model.Project
       .findOneAndUpdate({
-        _id: group_id,
+        _id: project_id,
       }, {
         $push: {
           users: {
@@ -86,13 +85,13 @@ class UserService extends Service {
         },
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group;
+    return project;
   }
 
-  async removeGroupUser(group_id, user_id) {
-    const group = await this.ctx.model.Group
+  async deleteProjectUser(project_id, user_id) {
+    const project = await this.ctx.model.Project
       .findOneAndUpdate({
-        _id: group_id,
+        _id: project_id,
       }, {
         $pull: {
           users: {
@@ -101,22 +100,22 @@ class UserService extends Service {
         },
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group;
+    return project;
   }
 
-  async getGroupSetting(group_id) {
-    const group = await this.ctx.model.Group
+  async getProjectSetting(project_id) {
+    const project = await this.ctx.model.Project
       .findOne({
-        _id: group_id,
+        _id: project_id,
       }, 'setting')
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group && group.setting;
+    return project && project.setting;
   }
 
-  async updateGroupSetting(group_id, setting) {
-    const group = await this.ctx.model.Group
+  async updateProjectSetting(project_id, setting) {
+    const project = await this.ctx.model.Project
       .findOneAndUpdate({
-        _id: group_id,
+        _id: project_id,
       }, {
         setting,
       }, {
@@ -124,8 +123,8 @@ class UserService extends Service {
         fields: 'setting',
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group.setting;
+    return project;
   }
 }
 
-module.exports = UserService;
+module.exports = ProjectService;
