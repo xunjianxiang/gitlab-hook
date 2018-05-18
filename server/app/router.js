@@ -15,6 +15,7 @@ module.exports = app => {
   router.post('/api/ci/get_group_list', controller.group.getGroupList);
   router.post('/api/ci/get_gitlab_group_list', controller.group.getGitlabGroupList);
   router.post('/api/ci/add_group', controller.group.addGroup);
+  router.post('/api/ci/get_group_user_list', controller.group.getGroupUserList);
   router.post('/api/ci/add_group_user', controller.group.addGroupUser);
   router.post('/api/ci/delete_group_user', controller.group.deleteGroupUser);
   router.post('/api/ci/get_group_setting', controller.group.getGroupSetting);

@@ -69,7 +69,7 @@ class GroupController extends Controller {
       return;
     }
 
-    const group = await this.service.group.createOne({
+    const group = await this.service.group.createGroup({
       name,
       desc,
       remote,
@@ -89,6 +89,16 @@ class GroupController extends Controller {
     }
 
     this.ctx.body = { code, message, data };
+  }
+
+  async getGroupUserList() {
+    this.ctx.validate({
+      id: { type: 'string' },
+    });
+    const { id } = this.ctx.request.body;
+    const code = 0;
+    const data = await this.service.group.getGroupUserList(id);
+    this.ctx.body = { code, data };
   }
 
   async addGroupUser() {

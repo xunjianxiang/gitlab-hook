@@ -22,7 +22,7 @@ class UserService extends Service {
     return !group;
   }
 
-  async findAllByUserId(uid) {
+  async getGroupListByUserId(uid) {
     const groups = await this.ctx.model.Group
       .find({
         users: { $in: [ uid ] },
@@ -31,7 +31,7 @@ class UserService extends Service {
     return groups;
   }
 
-  async createOne(params) {
+  async createGroup(params) {
     const group = await this.ctx.model.Group
       .create(params)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
@@ -46,6 +46,22 @@ class UserService extends Service {
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return exists;
+  }
+
+  async getGroupUserList(group_id) {
+    const group = await this.ctx.model.Group
+      .findOne({
+        _id: group_id,
+      }, 'users')
+      .populate({ path: 'users.id', select: 'name email' })
+      .exec()
+      .catch(error => this.ctx.helper.mongooseErrorCatch(error));
+    return group
+      ? group.users.map(item => {
+        item.id.role = item.role;
+        return item.id;
+      })
+      : [];
   }
 
   async createGroupUser(group_id, user_id, user_role) {
