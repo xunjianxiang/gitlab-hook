@@ -5,6 +5,39 @@ module.exports = app => {
   const Schema = mongoose.Schema;
   const connection = app.mongooseDB.get('ci');
 
+  const GroupUserSchema = new Schema({
+    id: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      require: true,
+    },
+    role: {
+      type: Number,
+      enum: [ 1, 3 ],
+      default: 3,
+    },
+  }, {
+    _id: false,
+  });
+
+  const GroupSettingSchema = new Schema({
+    rundeck: {
+      domain: {
+        type: String,
+      },
+      token: {
+        type: String,
+      },
+    },
+    yapi: {
+      domain: {
+        type: String,
+      },
+    },
+  }, {
+    _id: false,
+  });
+
   const GroupSchema = new Schema({
     name: {
       type: String,
@@ -29,8 +62,7 @@ module.exports = app => {
       },
     },
     users: {
-      type: [ Schema.Types.ObjectId ],
-      ref: 'User',
+      type: [ GroupUserSchema ],
       default: [],
     },
     projects: {
@@ -39,17 +71,14 @@ module.exports = app => {
       default: [],
     },
     setting: {
-      rundeck: {
-        domain: {
-          type: String,
+      type: GroupSettingSchema,
+      default: {
+        rundeck: {
+          domain: '',
+          token: '',
         },
-        token: {
-          type: String,
-        },
-      },
-      yapi: {
-        domain: {
-          type: String,
+        yapi: {
+          domain: '',
         },
       },
     },
