@@ -25,4 +25,22 @@ module.exports = {
     return data.status;
   },
 
+  async invokeGitlabApi(path) {
+    const { data } = await this.curl('http://osa.du.com/api/git_api/v1', {
+      method: 'POST',
+      contentType: 'form',
+      dataType: 'json',
+      data: {
+        path,
+      },
+    }).catch(error => {
+      // 上报
+      return {
+        status: error.status,
+        data: null,
+      };
+    });
+    return data;
+  },
+
 };
