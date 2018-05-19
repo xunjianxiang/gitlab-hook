@@ -5,7 +5,7 @@ const Controller = require('egg').Controller;
 class GroupController extends Controller {
   async getGroupList() {
     const user = this.ctx.session.user;
-    const groups = await this.service.group.findAllByUserId(user.id);
+    const groups = await this.service.group.getGroupListByUserId(user.id);
     this.ctx.body = {
       code: 0,
       data: groups || [],
@@ -22,9 +22,6 @@ class GroupController extends Controller {
     this.ctx.validate({
       name: { type: 'string' },
     });
-
-    // TODO
-    // 校验 remote id 合法性
 
     const { name, desc, remote } = this.ctx.request.body;
 

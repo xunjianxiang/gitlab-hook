@@ -25,7 +25,7 @@ class UserService extends Service {
   async getGroupListByUserId(user_id) {
     const groups = await this.ctx.model.Group
       .find({
-        users: { $in: [ user_id ] },
+        'users.id': { $in: [ user_id ] },
       })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return groups;
@@ -66,10 +66,12 @@ class UserService extends Service {
       .exec()
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return group
-      ? group.users.map(item => {
-        item.id.role = item.role;
-        return item.id;
-      })
+      ? group.users
+        .filter(item => item.id)
+        .map(item => {
+          item.id.role = item.role;
+          return item.id;
+        })
       : [];
   }
 

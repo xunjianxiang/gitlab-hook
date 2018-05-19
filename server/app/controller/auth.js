@@ -49,12 +49,7 @@ class HookController extends Controller {
     let code,
       message,
       data;
-    await this.service.user.createOne({
-      name: 'admin',
-      email: 'admin@shuzilm.cn',
-      role: 1,
-      password: 'admin',
-    });
+
     const user = this.ctx.session.user;
     if (user) {
       code = 0;

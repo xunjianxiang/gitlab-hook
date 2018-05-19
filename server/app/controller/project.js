@@ -147,13 +147,13 @@ class ProjectController extends Controller {
 
   async updateProjectSetting() {
     this.ctx.validate({
-      id: { type: 'string' },
-      level: { type: 'string' },
-    }, this.ctx.request.body.setting.dingtalk);
-    this.ctx.validate({
       project_id: { type: 'string' },
       setting: { type: 'object' },
     });
+    this.ctx.validate({
+      id: { type: 'string' },
+      level: { type: 'string' },
+    }, this.ctx.request.body.setting.dingtalk);
 
     const { project_id, setting } = this.ctx.request.body;
 
