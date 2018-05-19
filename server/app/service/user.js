@@ -42,6 +42,17 @@ class UserService extends Service {
 
     return user;
   }
+
+  async getUserList() {
+    const users = await this.ctx.model.User
+      .find({
+        name: {
+          $ne: 'admin',
+        },
+      })
+      .catch(error => this.ctx.helper.mongooseErrorCatch(error));
+    return users;
+  }
 }
 
 module.exports = UserService;
