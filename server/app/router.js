@@ -33,6 +33,10 @@ module.exports = app => {
   router.post('/api/ci/get_project_setting', controller.project.getProjectSetting);
   router.post('/api/ci/update_project_setting', controller.project.updateProjectSetting);
 
+  router.post('/api/ci/get_job_list', controller.job.getJobList);
+  router.post('/api/ci/add_job', controller.job.addJob);
+  router.post('/api/ci/delete_job', controller.job.deleteJob);
+
   router.post('/api/ci/get_user_list', controller.user.getUserList);
 
 };
