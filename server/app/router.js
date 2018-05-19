@@ -25,4 +25,12 @@ module.exports = app => {
   router.post('/api/ci/get_gitlab_project_list', controller.gitlab.getGitlabProjectList);
   router.post('/api/ci/get_gitlab_project_member_list', controller.gitlab.getGitlabProjectMemberList);
 
+  router.post('/api/ci/get_project_list', controller.project.getProjectList);
+  router.post('/api/ci/add_project', controller.project.addProject);
+  router.post('/api/ci/get_project_user_list', controller.project.getProjectUserList);
+  router.post('/api/ci/add_project_user', controller.project.addProjectUser);
+  router.post('/api/ci/delete_project_user', controller.project.deleteProjectUser);
+  router.post('/api/ci/get_project_setting', controller.project.getProjectSetting);
+  router.post('/api/ci/update_project_setting', controller.project.updateProjectSetting);
+
 };
