@@ -22,15 +22,10 @@ class ProjectService extends Service {
   }
 
   async getProjectList(group_id) {
-    const group = await this.ctx.model.Group
-      .findOne({
-        _id: group_id,
-      }, 'projects')
-      .populate('projects')
+    const projects = await this.ctx.model.Project
+      .find({ group_id })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return group
-      ? group.projects
-      : [];
+    return projects;
   }
 
   async getProjectRemoteId(project_id, remote_type) {
@@ -45,6 +40,15 @@ class ProjectService extends Service {
   async addProject(params) {
     const project = await this.ctx.model.Project
       .create(params)
+      .catch(error => this.ctx.helper.mongooseErrorCatch(error));
+    return project;
+  }
+
+  async deleteProject(project_id) {
+    const project = await this.ctx.model.Project
+      .findOneAndRemove({
+        _id: project_id,
+      })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return project;
   }
@@ -66,10 +70,14 @@ class ProjectService extends Service {
       }, 'users')
       .populate({ path: 'users.id', select: 'name email' })
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
-    return project && project.users && project.users.map(user => {
-      user.id.role = user.role;
-      return user.id;
-    });
+    return project
+      ? project.users
+        .filter(user => user.id)
+        .map(user => {
+          user.id.role = user.role;
+          return user.id;
+        })
+      : [];
   }
 
   async addProjectUser(project_id, user_id, user_role) {

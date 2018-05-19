@@ -65,10 +65,10 @@ module.exports = app => {
       type: [ ProjectUserSchema ],
       default: [],
     },
-    jobs: {
-      type: [ Schema.Types.ObjectId ],
-      ref: 'Job',
-      default: [],
+    group_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Group',
+      required: true,
     },
     setting: {
       type: ProjectSettingSchema,

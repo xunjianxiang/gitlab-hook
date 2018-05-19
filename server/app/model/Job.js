@@ -34,6 +34,11 @@ module.exports = app => {
       type: [ StepSchema ],
       required: false,
     },
+    project_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
+      required: true,
+    },
   }, {
     timestamps: true,
   });

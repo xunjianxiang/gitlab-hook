@@ -65,11 +65,6 @@ module.exports = app => {
       type: [ GroupUserSchema ],
       default: [],
     },
-    projects: {
-      type: [ Schema.Types.ObjectId ],
-      ref: 'Project',
-      default: [],
-    },
     setting: {
       type: GroupSettingSchema,
       default: {
