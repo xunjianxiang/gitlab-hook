@@ -37,6 +37,13 @@ class ProjectService extends Service {
     return project && project.remote && project.remote.id;
   }
 
+  async getProject(condition) {
+    const project = await this.ctx.model.Project
+      .findOne(condition)
+      .catch(error => this.ctx.helper.mongooseErrorCatch(error));
+    return project;
+  }
+
   async addProject(params) {
     const project = await this.ctx.model.Project
       .create(params)

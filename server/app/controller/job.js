@@ -53,7 +53,7 @@ class JobController extends Controller {
       message,
       data;
     const { id } = this.ctx.request.body;
-    const job = await this.ctx.service.job.getJobById(id);
+    const job = await this.ctx.service.job.getJob({ _id: id });
     if (job && job.steps && job.steps.length) {
       code = 403;
       message = '请先清空该任务下步骤';

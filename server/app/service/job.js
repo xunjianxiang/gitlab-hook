@@ -12,9 +12,9 @@ class JobService extends Service {
     return jobs;
   }
 
-  async getJobById(job_id) {
+  async getJob(condition) {
     const job = await this.ctx.model.Job
-      .findOne({ _id: job_id })
+      .findOne(condition)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return job;
   }
