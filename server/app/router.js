@@ -20,11 +20,6 @@ module.exports = app => {
   router.post('/api/ci/get_group_setting', controller.group.getGroupSetting);
   router.post('/api/ci/update_group_setting', controller.group.updateGroupSetting);
 
-  router.post('/api/ci/get_gitlab_group_list', controller.gitlab.getGitlabGroupList);
-  router.post('/api/ci/get_gitlab_group_member_list', controller.gitlab.getGitlabGroupMemberList);
-  router.post('/api/ci/get_gitlab_project_list', controller.gitlab.getGitlabProjectList);
-  router.post('/api/ci/get_gitlab_project_member_list', controller.gitlab.getGitlabProjectMemberList);
-
   router.post('/api/ci/get_project_list', controller.project.getProjectList);
   router.post('/api/ci/add_project', controller.project.addProject);
   router.post('/api/ci/get_project_user_list', controller.project.getProjectUserList);
@@ -43,5 +38,10 @@ module.exports = app => {
   router.post('/api/ci/delete_step', controller.step.deleteStep);
 
   router.post('/api/ci/get_user_list', controller.user.getUserList);
+
+  router.post('/api/ci/get_gitlab_group_list', controller.gitlab.getGitlabGroupList);
+  router.post('/api/ci/get_gitlab_group_member_list', controller.gitlab.getGitlabGroupMemberList);
+  router.post('/api/ci/get_gitlab_project_list', controller.gitlab.getGitlabProjectList);
+  router.post('/api/ci/get_gitlab_project_member_list', controller.gitlab.getGitlabProjectMemberList);
 
 };
