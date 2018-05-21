@@ -5,6 +5,7 @@ const Service = require('egg').Service;
 class UserService extends Service {
 
   async findOneByNameAndPassword(name, password) {
+    password = this.app.crypto(password);
     const user = await this.ctx.model.User
       .findOne({
         name,
@@ -32,7 +33,8 @@ class UserService extends Service {
     return user;
   }
 
-  async createOne(params) {
+  async addUser(params) {
+    params.password = this.app.crypto(params.password);
     const user = await this.ctx.model.User
       .create(params)
       .catch(error => {

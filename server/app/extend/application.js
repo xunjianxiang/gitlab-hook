@@ -21,4 +21,11 @@ module.exports = {
     return data;
   },
 
+  crypto(unencrypted) {
+    return require('crypto')
+      .createHmac('sha1', 'ci')
+      .update(unencrypted)
+      .digest('hex');
+  },
+
 };
