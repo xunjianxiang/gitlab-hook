@@ -45,6 +45,9 @@ module.exports = appInfo => {
     all(error, ctx) {
       let message;
       switch (error.status) {
+        case 401:
+          message = error.message;
+          break;
         case 422:
           message = '参数错误';
           break;

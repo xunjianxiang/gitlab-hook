@@ -2,12 +2,15 @@
 
 module.exports = () => {
   return async function interceptor(ctx, next) {
-    if (ctx.session.user) {
+    const user = ctx.session.user;
+    if (user) {
+      const { name, password, isldap } = user;
+      isldap && await ctx.ldap(name, password);
       await next();
     } else {
       ctx.body = {
         code: 401,
-        message: '请先登录',
+        message: '未登录，请先登录',
       };
     }
   };

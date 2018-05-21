@@ -25,6 +25,6 @@ module.exports = app => {
   app.messenger.once('egg-ready', async () => {
     // 创建 admin 账户
     const user = await app.model.User.findOne({ name: 'admin' });
-    user || await app.model.User.create({ name: 'admin', email: 'admin@shuzilm.cn', password: 'admin' });
+    user || await app.model.User.create({ name: 'admin', email: 'admin@shuzilm.cn', password: 'admin', role: 1 });
   });
 };

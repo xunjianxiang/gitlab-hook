@@ -20,13 +20,11 @@ class HookController extends Controller {
     const { name, password, isldap } = this.ctx.request.body;
     let user;
     if (isldap) {
-      // dap 认证
-      code = await this.app.ldap(name, password);
-      if (code) {
-        message = 'ldap 认证失败';
-      } else {
-        user = await this.service.user.findOneByNameFromLdap(name, true);
-      }
+      // ldap 认证
+      await this.ctx.ldap(name, password);
+      user = await this.service.user.findOneByNameFromLdap(name, true);
+      // 修改 session 中用户 password， 方便后期 ldap 实时认证
+      user.password = password;
     } else {
       // 本地认证
       user = await this.service.user.findOneByNameAndPassword(name, password);
@@ -52,8 +50,17 @@ class HookController extends Controller {
 
     const user = this.ctx.session.user;
     if (user) {
+      user.isldap && await this.ctx.ldap(user.name, user.password);
       code = 0;
-      data = user;
+      data = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isldap: user.isldap,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      };
     } else {
       code = 401;
       message = '未登录';
