@@ -10,7 +10,7 @@ class StepController extends Controller {
 
     const { job_id } = this.ctx.request.body;
     const code = 0;
-    const data = await this.ctx.service.step.getStepList(job_id);
+    const data = await this.service.step.getStepList(job_id);
     this.ctx.body = { code, data };
   }
 
@@ -22,7 +22,7 @@ class StepController extends Controller {
       order: { type: 'number', min: 1, required: false },
     });
 
-    const step = await this.ctx.service.step.addStep(this.ctx.request.body);
+    const step = await this.service.step.addStep(this.ctx.request.body);
     let code,
       message,
       data;
@@ -46,7 +46,7 @@ class StepController extends Controller {
       order: { type: 'number', min: 1, required: false },
     });
     const { id, type, param, order } = this.ctx.request.body;
-    const step = await this.ctx.service.step.updateStep(id, { type, param, order });
+    const step = await this.service.step.updateStep(id, { type, param, order });
     let code,
       message;
     if (step) {
@@ -64,7 +64,7 @@ class StepController extends Controller {
       id: { type: 'string' },
     });
     const { id } = this.ctx.request.body;
-    const step = await this.ctx.service.step.deleteStep(id);
+    const step = await this.service.step.deleteStep(id);
     let code,
       message;
 

@@ -7,7 +7,7 @@ class UserController extends Controller {
     let code,
       message,
       data;
-    const users = await this.ctx.service.user.getUserList();
+    const users = await this.service.user.getUserList();
     if (users) {
       code = 0;
       data = users;

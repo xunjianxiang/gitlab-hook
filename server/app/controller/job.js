@@ -9,7 +9,7 @@ class JobController extends Controller {
     });
 
     const { project_id } = this.ctx.request.body;
-    const jobs = await this.ctx.service.job.getJobList(project_id);
+    const jobs = await this.service.job.getJobList(project_id);
     let code,
       message,
       data;
@@ -29,7 +29,7 @@ class JobController extends Controller {
       name: { type: 'string' },
       branch: { type: 'string' },
     });
-    const job = await this.ctx.service.job.addJob(this.ctx.request.body);
+    const job = await this.service.job.addJob(this.ctx.request.body);
     let code,
       message,
       data;
@@ -53,12 +53,12 @@ class JobController extends Controller {
       message,
       data;
     const { id } = this.ctx.request.body;
-    const job = await this.ctx.service.job.getJob({ _id: id });
+    const job = await this.service.job.getJob({ _id: id });
     if (job && job.steps && job.steps.length) {
       code = 403;
       message = '请先清空该任务下步骤';
     } else {
-      const status = await this.ctx.service.job.deleteJob(id);
+      const status = await this.service.job.deleteJob(id);
       if (status) {
         code = 0;
         message = '任务删除成功';
