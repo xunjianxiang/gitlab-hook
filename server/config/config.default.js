@@ -6,6 +6,13 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name;
 
+  exports.cluster = {
+    listen: {
+      port: 4000,
+      hostname: '0.0.0.0',
+    },
+  };
+
   // add your config here
   config.middleware = [
     'interceptor',
