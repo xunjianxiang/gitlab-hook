@@ -44,5 +44,22 @@
     "url": ""
   },
   "author": "xunjianxiang@gmail.com",
-  "license": "MIT"
+  "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "validate-commit-msg": {
+      "scope": {
+        "required": true,
+        "allowed": [
+          "server",
+          "client",
+          "global"
+        ],
+        "validate": true,
+        "multiple": true
+      }
+    }
+  }
 }
