@@ -116,6 +116,31 @@ class GitlabController extends Controller {
     this.ctx.body = { code, message, data };
   }
 
+  async getGitlabProjectBranchList() {
+    this.ctx.validate({
+      project_id: { type: 'string' },
+    });
+
+    const { project_id } = this.ctx.request.body;
+
+    let code,
+      message,
+      data;
+
+    const remoteid = await this.service.project.getProjectRemoteId(project_id, 1);
+
+    const result = await this.app.invokeGitlabApi(`${this.ctx.helper.apiParamsInject(this.app.api.gitlab.branch.list, remoteid)}?per_page=100&page=1`);
+    if (result.message) {
+      code = 1;
+      message = result.message;
+    } else {
+      code = 0;
+      data = result.map(branch => branch.name);
+    }
+
+    this.ctx.body = { code, message, data };
+  }
+
   async hook() {
     const GitlabHookEventMap = {
       push: this.push,

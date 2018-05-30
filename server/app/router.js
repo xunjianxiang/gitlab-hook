@@ -41,6 +41,7 @@ module.exports = app => {
   router.post('/api/ci/get_gitlab_group_member_list', controller.gitlab.getGitlabGroupMemberList);
   router.post('/api/ci/get_gitlab_project_list', controller.gitlab.getGitlabProjectList);
   router.post('/api/ci/get_gitlab_project_member_list', controller.gitlab.getGitlabProjectMemberList);
+  router.post('/api/ci/get_gitlab_project_branch_list', controller.gitlab.getGitlabProjectBranchList);
   router.post('/api/ci/gitlab_hook', controller.gitlab.hook);
 
 };
