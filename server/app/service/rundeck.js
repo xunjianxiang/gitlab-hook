@@ -26,7 +26,7 @@ class RundeckService extends Service {
     this.logger.info('rundeck execute verify', verify_status);
     if (!verify_status) return;
     this.logger.info('发布成功');
-    this.alarm('发布成功');
+    this.alarm('发布成功', true);
     return true;
   }
 
@@ -69,7 +69,7 @@ class RundeckService extends Service {
           }
         })
         .catch(error => {
-          reject(new Error(`连接失败${linebreak}${error.message || error.statusText}`));
+          reject(new Error(`Rundeck 服务器连接失败${linebreak}${error.message || error.statusText}`));
         });
     })
       .catch(error => {
@@ -103,17 +103,17 @@ class RundeckService extends Service {
               resolve(info);
             },
             failed: info => {
-              reject(info);
+              reject(new Error(info));
             },
             aborted: info => {
-              reject(info);
+              reject(new Error(info));
             },
           };
           const info = result.result.executions.execution.$;
           action[info.status](info);
         })
         .catch(error => {
-          reject(new Error(`连接失败${linebreak}${error.message || error.statusText}`));
+          reject(new Error(`Rundeck 服务器连接失败${linebreak}${error.message || error.statusText}`));
         });
     })
       .catch(error => {
@@ -136,11 +136,11 @@ class RundeckService extends Service {
           if (!error_logs.length) {
             resolve(true);
           } else {
-            reject(error_logs.join(linebreak));
+            reject(new Error(error_logs.join(linebreak)));
           }
         })
         .catch(error => {
-          reject(new Error(`连接失败${linebreak}${error.message || error.statusText}`));
+          reject(new Error(`Rundeck 服务器连接失败${linebreak}${error.message || error.statusText}`));
         });
     })
       .catch(error => {
@@ -148,7 +148,8 @@ class RundeckService extends Service {
       });
   }
 
-  async alarm(message) {
+  async alarm(message, status = false) {
+    status || this.service.hooklog.addHookLogMessage(message);
     const { project } = this.ctx.extra;
     const id = project && project.setting && project.setting.dingtalk && project.setting.dingtalk.id || this.config.dingtalk.id;
     const level = project && project.setting && project.setting.dingtalk && project.setting.dingtalk.level || this.config.dingtalk.level;

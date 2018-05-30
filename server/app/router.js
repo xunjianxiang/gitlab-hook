@@ -29,6 +29,8 @@ module.exports = app => {
   router.post('/api/ci/get_job_list', controller.job.getJobList);
   router.post('/api/ci/add_job', controller.job.addJob);
   router.post('/api/ci/delete_job', controller.job.deleteJob);
+  router.post('/api/ci/get_job_hook_status', controller.job.getJobExecuteStatus);
+  router.post('/api/ci/update_job_hook_status', controller.job.updateJobExecuteStatus);
 
   router.post('/api/ci/get_step_list', controller.step.getStepList);
   router.post('/api/ci/add_step', controller.step.addStep);

@@ -170,8 +170,16 @@ class GitlabController extends Controller {
       return;
     }
 
+    // 检测是否正在执行
+    const log = await this.service.hooklog.getHookLogStatus(job.id);
+    if (log.status === 'pending') {
+      this.ctx.status = 409;
+      this.ctx.body = '任务重复';
+      return;
+    }
+
     // 记录
-    this.service.hooklog.addHookLog({
+    await this.service.hooklog.addHookLog({
       job_id: job.id,
       data: this.ctx.request.body,
     });
@@ -192,18 +200,23 @@ class GitlabController extends Controller {
         : (prev.order > current.order ? 0 : 1);
     });
 
+
+    let status = true;
+
     for (const step of steps) {
       this.logger.info('step', step.type);
       this.ctx.extra = { project, job, step };
       if (step.type === 'rundeck') {
-        const status = await this.service.rundeck.publish();
+        status = await this.service.rundeck.publish();
         if (!status) break;
       }
       if (step.type === 'yapi') {
-        const status = await this.service.yapi.autotest();
+        status = await this.service.yapi.autotest();
         if (!status) break;
       }
     }
+
+    await this.service.hooklog.setHookLogStatus(job.id, status ? 'success' : 'error');
   }
 }
 

@@ -33,7 +33,13 @@ class YapiService extends Service {
         .curl(`${yapi.domain}/api/open/run_auto_test?id=${testcase.id}&token=${token.token}&mode=json&email=false&env_name=${step.param}`, {
           dataType: 'json',
         })
-        .then(response => response.data);
+        .then(response => response.data)
+        .catch(error => {
+          return {
+            errcode: error.status,
+            errmsg: `自动化测试服务调用失败：${error.status}`,
+          };
+        });
     }));
 
     const testresults = responses.map((item, index) => {
@@ -47,18 +53,19 @@ class YapiService extends Service {
       return result;
     });
 
+    this.alarm(testresults);
+    this.report(testresults);
+    this.logger.info('yapi autotest');
+    return !testresults.map(item => !!(item.response && !item.response.message.failedNum)).filter(item => !item).length;
+  }
+
+  async alarm(testresults) {
     const info = testresults.map(item => !!(item.response && !item.response.message.failedNum));
     const total = info.length;
     const succeed = info.filter(item => item).length;
     const failed = info.filter(item => !item).length;
-
-    this.alarm(`成功测试集：${succeed}，失败测试集：${failed}，总计：${total}`);
-    this.report(testresults);
-    this.logger.info('yapi autotest');
-    return !failed;
-  }
-
-  async alarm(message) {
+    const message = JSON.stringify(testresults.filter(item => !item.response || item.response.message.failedNum));
+    failed && this.service.hooklog.addHookLogMessage(this.ctx.extra.job.id, message);
     const { project } = this.ctx.extra;
     const id = project && project.setting && project.setting.dingtalk && project.setting.dingtalk.id || this.config.dingtalk.id;
     const level = project && project.setting && project.setting.dingtalk && project.setting.dingtalk.level || this.config.dingtalk.level;
@@ -71,7 +78,7 @@ class YapiService extends Service {
     messages.push(`代码仓库：${this.ctx.request.body.project.http_url}`);
     messages.push('执行业务：持续集成');
     messages.push('执行模块：YApi 接口测试');
-    messages.push(`集成信息：${message}`);
+    messages.push(`集成信息：成功测试集：${succeed}，失败测试集：${failed}，总计：${total}`);
     const data = messages.join(linebreak);
     this.ctx.helper.dingtalk({ id, level, data });
   }
