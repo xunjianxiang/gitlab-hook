@@ -9,7 +9,10 @@
     "egg-mongoose": "^2.2.1",
     "egg-scripts": "^2.5.0",
     "egg-validate": "^1.0.0",
-    "moment": "^2.22.1"
+    "moment": "^2.22.1",
+    "nodemailer": "^4.6.5",
+    "pug": "^2.0.3",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "autod": "^3.0.1",

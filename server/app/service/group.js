@@ -2,7 +2,7 @@
 
 const Service = require('egg').Service;
 
-class UserService extends Service {
+class GroupService extends Service {
 
   async getRemoteUnique(remote) {
     const group = await this.ctx.model.Group
@@ -130,4 +130,4 @@ class UserService extends Service {
   }
 }
 
-module.exports = UserService;
+module.exports = GroupService;

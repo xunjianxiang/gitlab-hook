@@ -1,0 +1,75 @@
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title 测试报告
+  body
+    table(width="100%", cellpadding="0", cellspacing="5", style="color: #333;")
+      tr
+        td(align="center")
+          table(width="680", cellpadding="5", cellspacing="5")
+            tr
+              td(align="center", colspan="2", style="font-size: 36px;")
+                = name
+                |
+                | API 测试报告
+            tr
+              td(align="center", colspan="2", style="font-size: 15px;border-left: 3px solid #ddd; text-align:left")
+                | 项目：
+                = repo
+            tr
+              td(align="center", colspan="2", style="font-size: 15px;border-left: 3px solid #ddd; text-align:left")
+                | 分支：
+                = branch
+            tr
+              td(colspan="2")
+                table(width="100%", border="1", cellspacing="0", cellpadding="5", style="border-color: #eee;")
+                  tr
+                    th 编号
+                    th 信息
+                    th 作者
+                  each item in commits
+                    tr
+                      td= item.id
+                      td= item.message
+                      td= item.author.name
+            each testresult in testresults
+              tr
+                if testresult.response
+                  if testresult.response.message.failedNum
+                    td(style="border-left: 3px solid orange;")
+                      span(style="display: inline-block; width: 30px;")= testresult.id
+                      span(style="color: #888;")
+                        = testresult.response.message.msg
+                        | （
+                        = testresult.response.runTime
+                        | ）
+
+                  else
+                    td(style="border-left: 3px solid green;")
+                      span(style="display: inline-block; width: 30px;")= testresult.id
+                      span(style="color: #888;")
+                        = testresult.response.message.msg
+                        | （
+                        = testresult.response.runTime
+                        | ）
+                else
+                  td(style="border-left: 3px solid red;")
+                    span(style="display: inline-block; width: 30px;")= testresult.id
+                    span(style="color: #888;")= testresult.message
+              if testresult.response && testresult.response.message.failedNum
+                tr
+                  td(colspan="2")
+                    table(width="100%", border="1", cellspacing="0", cellpadding="5", style="border-color: #eee;")
+                      tr
+                        th 编号
+                        th 名称
+                        th API
+                        th 校验结果
+                      each item in testresult.response.list.filter(item => item.code)
+                        tr
+                          td= item.id
+                          td= item.name
+                          td= item.path
+                          td= item.validRes[0].message.replace('AssertionError [ERR_ASSERTION]: ', '')

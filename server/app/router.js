@@ -6,8 +6,6 @@
 module.exports = app => {
   const { router, controller } = app;
 
-  router.post('/api/ci/hook', controller.hook.index);
-
   router.post('/api/ci/login', controller.auth.login);
   router.post('/api/ci/session', controller.auth.session);
   router.post('/api/ci/logout', controller.auth.logout);
@@ -43,5 +41,6 @@ module.exports = app => {
   router.post('/api/ci/get_gitlab_group_member_list', controller.gitlab.getGitlabGroupMemberList);
   router.post('/api/ci/get_gitlab_project_list', controller.gitlab.getGitlabProjectList);
   router.post('/api/ci/get_gitlab_project_member_list', controller.gitlab.getGitlabProjectMemberList);
+  router.post('/api/ci/gitlab_hook', controller.gitlab.hook);
 
 };

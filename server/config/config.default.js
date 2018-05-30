@@ -19,7 +19,7 @@ module.exports = appInfo => {
   ];
 
   config.interceptor = {
-    ignore: /\/login|\/logout|\/session|\/hook/,
+    ignore: /\/login|\/logout|\/session|\/gitlab_hook/,
   };
 
   config.session = {
@@ -42,14 +42,14 @@ module.exports = appInfo => {
         options: {},
       },
       yapi: {
-        url: 'mongodb://127.0.0.1/yapi',
+        url: 'mongodb://192.168.2.247/yapi',
         options: {},
       },
     },
   };
 
   config.onerror = {
-    all(error, ctx) {
+    html(error, ctx) {
       let message;
       switch (error.status) {
         case 401:
@@ -69,6 +69,40 @@ module.exports = appInfo => {
         message,
       });
     },
+    json(error, ctx) {
+      let message;
+      switch (error.status) {
+        case 401:
+          message = error.message;
+          break;
+        case 422:
+          message = '参数错误';
+          break;
+        default:
+          message = '服务器异常';
+          break;
+      }
+      ctx.response.set({ Accept: 'application/json' });
+      ctx.status = 200;
+      ctx.body = {
+        code: error.status,
+        message,
+      };
+    },
+  };
+
+  config.rundeck = {
+    domain: 'http://rs.du.com',
+    token: 'HBiFPhu6H07m0IsBMy1HoAxabPUoJI05',
+  };
+
+  config.dingtalk = {
+    id: 'fangcl',
+    level: 61,
+  };
+
+  config.yapi = {
+    domain: 'http://yapi.du.com',
   };
 
   return config;
