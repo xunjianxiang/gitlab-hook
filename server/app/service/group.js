@@ -22,11 +22,13 @@ class GroupService extends Service {
     return !group;
   }
 
-  async getGroupListByUserId(user_id) {
+  async getGroupList() {
+    const user = this.ctx.session.user;
+    const condition = user.role === 1
+      ? {}
+      : { 'users.id': { $in: [ user.id ] } };
     const groups = await this.ctx.model.Group
-      .find({
-        'users.id': { $in: [ user_id ] },
-      })
+      .find(condition)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return groups;
   }
@@ -41,6 +43,8 @@ class GroupService extends Service {
   }
 
   async createGroup(params) {
+    const user = this.ctx.session.user;
+    params.users = [{ id: user.id, role: user.role }];
     const group = await this.ctx.model.Group
       .create(params)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));

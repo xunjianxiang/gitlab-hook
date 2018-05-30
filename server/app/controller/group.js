@@ -4,8 +4,7 @@ const Controller = require('egg').Controller;
 
 class GroupController extends Controller {
   async getGroupList() {
-    const user = this.ctx.session.user;
-    const groups = await this.service.group.getGroupListByUserId(user.id);
+    const groups = await this.service.group.getGroupList();
     this.ctx.body = {
       code: 0,
       data: groups || [],

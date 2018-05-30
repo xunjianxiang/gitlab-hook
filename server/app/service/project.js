@@ -22,8 +22,12 @@ class ProjectService extends Service {
   }
 
   async getProjectList(group_id) {
+    const user = this.ctx.session.user;
+    const condition = user.role === 1
+      ? { group_id }
+      : { group_id, 'users.id': { $in: [ user.id ] } };
     const projects = await this.ctx.model.Project
-      .find({ group_id })
+      .find(condition)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
     return projects;
   }
@@ -45,6 +49,7 @@ class ProjectService extends Service {
   }
 
   async addProject(params) {
+    params.users = this.service.group.getGroupUserList(params.group_id);
     const project = await this.ctx.model.Project
       .create(params)
       .catch(error => this.ctx.helper.mongooseErrorCatch(error));
