@@ -14,7 +14,7 @@ class JobService extends Service {
       for (const index in jobs) {
         const job = jobs[index];
         const log = await this.ctx.service.hooklog.getHookLogStatus(job.id);
-        job.status = log.status;
+        job.status = log ? log.status : '';
       }
       return jobs;
     }
