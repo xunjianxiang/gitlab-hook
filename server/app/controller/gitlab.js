@@ -135,7 +135,7 @@ class GitlabController extends Controller {
       message = result.message;
     } else {
       code = 0;
-      data = result.map(branch => branch.name);
+      data = result.map(branch => ({ name: branch.name }));
     }
 
     this.ctx.body = { code, message, data };
